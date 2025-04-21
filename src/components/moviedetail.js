@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Card, ListGroup, ListGroupItem, Image } from 'react-bootstrap';
 import { BsStarFill } from 'react-icons/bs';
 import { useParams } from 'react-router-dom'; // Import useParams
+import Reviews from './reviews';
 
 const MovieDetail = () => {
   const dispatch = useDispatch();
   const { movieId } = useParams(); // Get movieId from URL parameters
-  const selectedMovie = useSelector(state => state.movie.selectedMovie);
+  var selectedMovie = useSelector(state => state.movie.selectedMovie);
   const loading = useSelector(state => state.movie.loading); // Assuming you have a loading state in your reducer
   const error = useSelector(state => state.movie.error); // Assuming you have an error state in your reducer
 
@@ -18,6 +19,8 @@ const MovieDetail = () => {
   }, [dispatch, movieId]);
 
   const DetailInfo = () => {
+    //return <div>{JSON.stringify(useSelector(state => state.movie.selectedMovie))}</div>;
+
     if (loading) {
       return <div>Loading....</div>;
     }
@@ -29,6 +32,7 @@ const MovieDetail = () => {
     if (!selectedMovie) {
       return <div>No movie data available.</div>;
     }
+    // selectedMovie = selectedMovie.movie[0];
 
     return (
       <Card className="bg-dark text-dark p-4 rounded">
@@ -47,7 +51,7 @@ const MovieDetail = () => {
           </ListGroupItem>
           <ListGroupItem>
             <h4>
-              <BsStarFill /> {selectedMovie.avgRating}
+              <BsStarFill /> {Math.round(selectedMovie.avgRating*10)/10}
             </h4>
           </ListGroupItem>
         </ListGroup>
@@ -58,6 +62,13 @@ const MovieDetail = () => {
               {review.rating}
             </p>
           ))}
+        </Card.Body>
+        
+        <Card.Body className="card-body bg-white">
+            <Reviews>{{
+              "_id": selectedMovie._id, 
+              "username":localStorage.getItem('username')}}
+            </ Reviews>
         </Card.Body>
       </Card>
     );
